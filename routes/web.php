@@ -17,13 +17,8 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+    return Inertia::render('Welcome');
+})->name('/');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -34,5 +29,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::resource('recipe', \App\Http\Controllers\RecipeController::class)
+    ->only(['show']);
+
+Route::get('images/main-logo.png', function () {
+    return response()->file(public_path('images/main-logo.png'));
+})->name('images.main-logo');
 
 require __DIR__.'/auth.php';
